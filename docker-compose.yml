@@ -1,0 +1,24 @@
+services:
+  netvista:
+    image: netvista:2.1.0
+    container_name: netvista
+    restart: unless-stopped
+    shm_size: '1gb'
+    volumes:
+      - netvista-reports:/data/reports
+    networks:
+      - dokploy-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.netvista.rule=Host(`netvista.example.com`)
+      - traefik.http.routers.netvista.entrypoints=websecure
+      - traefik.http.routers.netvista.tls.certresolver=letsencrypt
+      - traefik.http.services.netvista.loadbalancer.server.port=8080
+      - traefik.http.routers.netvista.middlewares=netvista-auth
+      - traefik.http.middlewares.netvista-auth.basicauth.users=admin:$$2y$$05$$REPLACE_ME
+
+volumes:
+  netvista-reports:
+networks:
+  dokploy-network:
+    external: true
