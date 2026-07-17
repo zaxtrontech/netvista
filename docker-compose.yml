@@ -1,5 +1,8 @@
 services:
   netvista:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: netvista:2.1.0
     container_name: netvista
     restart: unless-stopped
